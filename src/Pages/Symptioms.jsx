@@ -13,7 +13,7 @@ const Symptioms = () => {
 
 
     return (
-        <div>
+        <div className='pb-20'>
             {/* Cardinal Motor Symptoms Section */}
             <motion.div
                 ref={cardinalRef}
