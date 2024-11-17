@@ -1,11 +1,13 @@
 import React, { useContext, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { AuthContext } from '../Pages/Provider/AuthProvider';
+import { FaUserCircle } from 'react-icons/fa';
 
 
 const Navbar = () => {
 
 
-
+    const {user, logOut, loading} = useContext(AuthContext);
     //console.log(user ? user.role : null)
 
     const navLink = (
@@ -19,15 +21,21 @@ const Navbar = () => {
         </>
     );
 
-  
-
 
     const handleLogout = () => {
         logOut()
             .then(() => console.log("Log out successful"))
             .catch((error) => console.log(error.message));
     };
+    
 
+    const [isHovered, setIsHovered] = useState(false);
+    const handleMouseEnter = () => setIsHovered(true);
+    const handleMouseLeave = () => setIsHovered(false);
+
+    if(loading){
+        <p>Loading please wait!</p>
+    }
     
 
     return (
@@ -62,6 +70,25 @@ const Navbar = () => {
                 </div>
 
                 <div className="navbar-end">
+                {user ? (
+                        <>
+                            <div className="tooltip tooltip-left z-20  hover:tooltip-open" data-tip={user.displayName}>
+                                <img src={user.photoURL} className="lg:ml-5 w-1/4 md:w-16 hidden lg:block rounded-md" alt="User Profile" />
+                            </div>
+                            <a onClick={handleLogout} className="btn btn-sm ml-4 btn-secondary">Log out</a>
+                        </>
+                    ) : (
+                        <div className="relative text-center" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} >
+                            <FaUserCircle className="text-4xl text-blue-600" />
+                            {isHovered && (
+                                <ul className="bg-gradient-to-r from-blue-900 to-orange-300 rounded-lg p-5 right-0 absolute font-bold text-white z-20">
+                                    <li className="hover:bg-gray-400 hover:p-1 hover:rounded-lg hover:text-black my-2"><NavLink to="/Login">Login</NavLink></li>
+                                    <hr />
+                                    <li className="hover:bg-gray-400 hover:p-1 hover:rounded-lg hover:text-black my-2"><NavLink to="/Registration">Registration</NavLink></li>
+                                </ul>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
